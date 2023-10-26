@@ -62,13 +62,26 @@ export default function Home() {
         }
     };
 
+    const checkbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.currentTarget.checked) {
+            e.currentTarget.parentElement?.setAttribute(
+                "class",
+                "line-through"
+            );
+        } else {
+            e.currentTarget.parentElement?.setAttribute("class", "");
+        }
+        console.log();
+    };
+
     return (
         <main className="min-h-screen p-24">
             {Tasks &&
                 Tasks.map(
                     (e): ReactNode => (
                         <div key={e.id}>
-                            {e.task} {e.completed}
+                            <p>{e.task}</p> {e.completed}
+                            <input type="checkbox" onChange={checkbox} />
                         </div>
                     )
                 )}
