@@ -1,6 +1,7 @@
 "use client";
 import { ReactNode, useEffect, useState } from "react";
 import * as controller from "../../utils/api";
+import Modal from "./modal-form";
 
 export default function Home() {
     interface Task {
@@ -16,6 +17,7 @@ export default function Home() {
 
     const [Tasks, setTasks] = useState<any[]>([]);
     const [formData, setFormData] = useState<Task>(initialFormData);
+    const [open, setOpen] = useState<any>(false);
 
     const loadTasks = () => {
         const abortController = new AbortController();
@@ -66,42 +68,47 @@ export default function Home() {
         if (e.currentTarget.checked) {
             e.currentTarget.parentElement?.setAttribute(
                 "class",
-                "line-through"
+                "flex gap-5 line-through"
             );
         } else {
-            e.currentTarget.parentElement?.setAttribute("class", "");
+            e.currentTarget.parentElement?.setAttribute("class", "flex gap-5 ");
         }
-        console.log();
     };
 
     return (
-        <main className="min-h-screen p-24">
+        <main className="flex flex-col min-h-screen p-2">
             {Tasks &&
                 Tasks.map(
                     (e): ReactNode => (
-                        <div key={e.id}>
-                            <p>{e.task}</p> {e.completed}
+                        <div key={e.id} className="flex justify-center gap-1">
                             <input type="checkbox" onChange={checkbox} />
+                            <p>{e.task}</p>
+                            <p>{e.desc}</p>
                         </div>
                     )
                 )}
-
-            <form onSubmit={submitHandler}>
-                <input
-                    type="text"
-                    name="task"
-                    value={formData.task}
-                    onChange={changeHandler}
-                />
-                <input
-                    type="checkbox"
-                    name="completed"
-                    onChange={changeHandler}
-                />
-                <button type="submit" className="btn ">
-                    SUBMIT
+            <div className="flex justify-center sticky bottom-0">
+                <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-5 py-5 rounded-full"
+                    onClick={() => setOpen(true)}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-7 h-7"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                        />
+                    </svg>
                 </button>
-            </form>
+            </div>
+            <Modal open={open} setOpen={setOpen} />
         </main>
     );
 }
