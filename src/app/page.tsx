@@ -3,6 +3,8 @@ import { ReactNode, useEffect, useState } from "react";
 import * as controller from "../../utils/api";
 import Modal from "./modal-form";
 
+//a way of preserving daily tasks thruoiughtt days (with cookies maybe?)
+
 export default function Home() {
     interface Task {
         task: string;
@@ -26,8 +28,32 @@ export default function Home() {
 
     useEffect(loadTasks, []);
 
-    let submitHandler = (data: Object) => {
+    let submitHandler = (data: Task) => {
         const abortController = new AbortController();
+        const { task, desc } = data;
+        if (task.includes("(") && task.includes(")")) {
+            let arr = task.match(/[^\/\(\)]+/g)?.map((e): Task => {
+                return { task: e.trim(), completed: false };
+            });
+
+            if (desc) {
+                desc?.match(/[^\/\(\)]+/g)?.forEach((e) => {
+                    console.log(e);
+                    let newArr = e?.match(/\[[0-9-]+\]/g);
+                    /* @ts-ignore:disable-next-line */
+                    let num = parseInt(newArr[0]?.match(/[\d]+/g));
+                    /* @ts-ignore:disable-next-line */
+                    if (num > arr.length && num <= 0) return;
+                    /* @ts-ignore:disable-next-line */
+                    arr[num - 1].desc = e.trim().slice(0, -3);
+                });
+            }
+
+            //this is a description for the 3rd task[3]
+            /* @ts-ignore:disable-next-line */
+            controller.createTask(abortController.signal, arr).then(loadTasks);
+            return () => abortController.abort();
+        }
 
         controller.createTask(abortController.signal, data).then(loadTasks);
 

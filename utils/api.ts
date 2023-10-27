@@ -60,7 +60,10 @@ export async function listTasks(signal: AbortSignal) {
     return await fetchJson(url, { headers, signal }, []);
 }
 
-export async function createTask(signal: AbortSignal, data: Object) {
+export async function createTask(
+    signal: AbortSignal,
+    data: Object | RegExpMatchArray
+) {
     const url = new URL(`${API_BASE_URL}/task`);
     const options = {
         method: "POST",

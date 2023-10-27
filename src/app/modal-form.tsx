@@ -25,14 +25,13 @@ export default function Modal({
         console.log(formData);
         setOpen(false);
         handleSubmit(formData);
+        setFormData(initialFormData);
     };
 
     let changeHandler = (
         e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
         e.preventDefault();
-        console.log(e.currentTarget.value);
-        console.log(formData);
 
         setFormData({
             ...formData,
