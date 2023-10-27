@@ -16,7 +16,6 @@ export default function Home() {
     };
 
     const [Tasks, setTasks] = useState<any[]>([]);
-    const [formData, setFormData] = useState<Task>(initialFormData);
     const [open, setOpen] = useState<any>(false);
 
     const loadTasks = () => {
@@ -27,69 +26,52 @@ export default function Home() {
 
     useEffect(loadTasks, []);
 
-    let submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
+    let submitHandler = (data: Object) => {
         const abortController = new AbortController();
 
-        controller.createTask(abortController.signal, formData).then(loadTasks);
+        controller.createTask(abortController.signal, data).then(loadTasks);
 
-        setFormData(initialFormData);
-
-        console.log(formData);
         return () => abortController.abort();
-    };
-
-    let changeHandler = (e: React.FormEvent<HTMLInputElement>) => {
-        console.log(e.currentTarget.checked);
-        if (e.currentTarget.name === "completed" && e.currentTarget.checked) {
-            setFormData({
-                ...formData,
-                completed: true,
-            });
-            console.log("true");
-        } else if (
-            e.currentTarget.name === "completed" &&
-            !e.currentTarget.checked
-        ) {
-            setFormData({
-                ...formData,
-                completed: false,
-            });
-        } else {
-            setFormData({
-                ...formData,
-                [e.currentTarget.name]: e.currentTarget.value,
-            });
-        }
     };
 
     const checkbox = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.currentTarget.checked) {
             e.currentTarget.parentElement?.setAttribute(
                 "class",
-                "flex gap-5 line-through"
+                "flex justify-center gap-1 text-xl line-through decoration-dotted"
             );
         } else {
-            e.currentTarget.parentElement?.setAttribute("class", "flex gap-5 ");
+            e.currentTarget.parentElement?.setAttribute(
+                "class",
+                "flex justify-center gap-1 text-xl"
+            );
         }
     };
 
     return (
-        <main className="flex flex-col min-h-screen p-2">
-            {Tasks &&
-                Tasks.map(
-                    (e): ReactNode => (
-                        <div key={e.id} className="flex justify-center gap-1">
-                            <input type="checkbox" onChange={checkbox} />
-                            <p>{e.task}</p>
-                            <p>{e.desc}</p>
-                        </div>
-                    )
-                )}
-            <div className="flex justify-center sticky bottom-0">
+        <main className="flex flex-col min-h-screen font-Karla">
+            <div className="flex py-5 px-5 m-0 bg-slate-300 text-gray-700 drop-shadow-xl">
+                <h1 className="drop-shadow-2xl text-4xl ">TASK</h1>
+            </div>
+
+            <div className=" pt-10">
+                {Tasks &&
+                    Tasks.map(
+                        (e): ReactNode => (
+                            <div
+                                key={e.id}
+                                className="flex justify-center gap-1 text-xl"
+                            >
+                                <input type="checkbox" onChange={checkbox} />
+                                <p>{e.task}</p>
+                                <p>{e.desc}</p>
+                            </div>
+                        )
+                    )}
+            </div>
+            <div className="flex justify-center h-96 items-end">
                 <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-5 py-5 rounded-full"
+                    className="inline-flex bg-blue-500 hover:bg-blue-700 text-white font-bold px-5 py-5 h-18 rounded-full transition-transform hover:rotate-90 ease-in-out"
                     onClick={() => setOpen(true)}
                 >
                     <svg
@@ -98,17 +80,22 @@ export default function Home() {
                         viewBox="0 0 24 24"
                         strokeWidth={1.5}
                         stroke="currentColor"
-                        className="w-7 h-7"
+                        className="w-6 h-6 "
                     >
                         <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                            d="M12 4.5v15m7.5-7.5h-15"
                         />
                     </svg>
                 </button>
             </div>
-            <Modal open={open} setOpen={setOpen} />
+            <Modal
+                open={open}
+                setOpen={setOpen}
+                handleSubmit={submitHandler}
+                initialFormData={initialFormData}
+            />
         </main>
     );
 }

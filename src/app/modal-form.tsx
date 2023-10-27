@@ -1,8 +1,44 @@
 import React, { useState, useRef, Fragment } from "react";
 import { Transition, Dialog } from "@headlessui/react";
-/* @ts-ignore:disable-next-line */
-export default function Modal({ open, setOpen }) {
+
+export default function Modal({
+    /* @ts-ignore:disable-next-line */
+    open,
+    /* @ts-ignore:disable-next-line */
+    setOpen,
+    /* @ts-ignore:disable-next-line */
+    handleSubmit,
+    /* @ts-ignore:disable-next-line */
+    initialFormData,
+}) {
     const cancelButtonRef = useRef(null);
+
+    interface Task {
+        task: string;
+        desc?: string;
+        completed: boolean;
+    }
+
+    const [formData, setFormData] = useState<Task>(initialFormData);
+
+    const submitHandler = () => {
+        console.log(formData);
+        setOpen(false);
+        handleSubmit(formData);
+    };
+
+    let changeHandler = (
+        e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        e.preventDefault();
+        console.log(e.currentTarget.value);
+        console.log(formData);
+
+        setFormData({
+            ...formData,
+            [e.currentTarget.name]: e.currentTarget.value,
+        });
+    };
 
     return (
         <Transition.Root show={open} as={Fragment}>
@@ -44,27 +80,34 @@ export default function Modal({ open, setOpen }) {
                                                 as="h3"
                                                 className="text-base font-semibold leading-6 text-gray-900"
                                             >
-                                                Deactivate account
+                                                Add Task
                                             </Dialog.Title>
-                                            <div className="mt-2">
-                                                <p className="text-sm text-gray-500">
-                                                    Are you sure you want to
-                                                    deactivate your account? All
-                                                    of your data will be
-                                                    permanently removed. This
-                                                    action cannot be undone.
-                                                </p>
-                                            </div>
+
+                                            <input
+                                                name="task"
+                                                className="shadow appearance-none border rounded py-2 px-3 m-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                placeholder="Name"
+                                                type="text"
+                                                value={formData.task}
+                                                onChange={changeHandler}
+                                            />
+                                            <textarea
+                                                className="shadow appearance-none w-3/4 py-2 px-3 mx-4 text-sm text-gray-700 rounded border focus:outline-none focus:shadow-outline"
+                                                placeholder="Description: Optional"
+                                                name="desc"
+                                                value={formData.desc}
+                                                onChange={changeHandler}
+                                            />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                     <button
-                                        type="button"
-                                        className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                                        onClick={() => setOpen(false)}
+                                        type="submit"
+                                        className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                                        onClick={submitHandler}
                                     >
-                                        Deactivate
+                                        Create
                                     </button>
                                     <button
                                         type="button"
