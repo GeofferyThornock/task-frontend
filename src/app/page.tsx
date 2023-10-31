@@ -1,6 +1,7 @@
 "use client";
 import { ReactNode, useEffect, useState } from "react";
 import * as controller from "../../utils/api";
+import { DateTime } from "luxon";
 import Modal from "./modal-form";
 
 //a way of preserving daily tasks thruoiughtt days (with cookies maybe?)
@@ -19,11 +20,16 @@ export default function Home() {
 
     const [Tasks, setTasks] = useState<any[]>([]);
     const [open, setOpen] = useState<any>(false);
+    const [date, setDate] = useState<DateTime>();
 
     const loadTasks = () => {
         const abortController = new AbortController();
-        controller.listTasks(abortController.signal).then(setTasks);
-        return () => abortController.abort();
+        controller
+            .listTasks(abortController.signal)
+            .then(setTasks)
+            .catch(console.log);
+        setDate(DateTime.now());
+        return () => abortController.abort("could not list");
     };
 
     useEffect(loadTasks, []);
@@ -78,6 +84,7 @@ export default function Home() {
         <main className="flex flex-col min-h-screen font-Karla">
             <div className="flex py-5 px-5 m-0 bg-slate-300 text-gray-700 drop-shadow-xl">
                 <h1 className="drop-shadow-2xl text-4xl ">TASK</h1>
+                <p>{date?.toString()}</p>
             </div>
 
             <div className=" pt-10">

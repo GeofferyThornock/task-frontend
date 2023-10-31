@@ -49,7 +49,8 @@ async function fetchJson(
         let message = "Unknown Error";
         if (error instanceof Error) message = error.message;
         // we'll proceed, but let's report it
-        reportError({ message });
+        console.log(options);
+        reportError(message);
         return Promise.resolve(onCancel);
     }
 }
@@ -65,6 +66,7 @@ export async function createTask(
     data: Object | RegExpMatchArray
 ) {
     const url = new URL(`${API_BASE_URL}/task`);
+
     const options = {
         method: "POST",
         headers,
