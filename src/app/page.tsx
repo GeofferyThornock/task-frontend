@@ -3,6 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 import * as controller from "../../utils/api";
 import { DateTime } from "luxon";
 import Modal from "./modal-form";
+import Task from "./task";
 
 //a way of preserving daily tasks thruoiughtt days (with cookies maybe?)
 
@@ -20,7 +21,8 @@ export default function Home() {
 
     const [Tasks, setTasks] = useState<any[]>([]);
     const [open, setOpen] = useState<any>(false);
-    const [date, setDate] = useState<DateTime>();
+    const [dropdown, setDropdown] = useState<any>(false);
+    const [date, setDate] = useState<String>();
 
     const loadTasks = () => {
         const abortController = new AbortController();
@@ -28,7 +30,7 @@ export default function Home() {
             .listTasks(abortController.signal)
             .then(setTasks)
             .catch(console.log);
-        setDate(DateTime.now());
+        setDate(DateTime.now().toLocaleString(DateTime.DATE_MED));
         return () => abortController.abort("could not list");
     };
 
@@ -66,20 +68,6 @@ export default function Home() {
         return () => abortController.abort();
     };
 
-    const checkbox = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.currentTarget.checked) {
-            e.currentTarget.parentElement?.setAttribute(
-                "class",
-                "flex justify-center gap-1 text-xl line-through decoration-dotted"
-            );
-        } else {
-            e.currentTarget.parentElement?.setAttribute(
-                "class",
-                "flex justify-center gap-1 text-xl"
-            );
-        }
-    };
-
     return (
         <main className="flex flex-col min-h-screen font-Karla">
             <div className="flex py-5 px-5 m-0 bg-slate-300 text-gray-700 drop-shadow-xl">
@@ -88,19 +76,7 @@ export default function Home() {
             </div>
 
             <div className=" pt-10">
-                {Tasks &&
-                    Tasks.map(
-                        (e): ReactNode => (
-                            <div
-                                key={e.id}
-                                className="flex justify-center gap-1 text-xl"
-                            >
-                                <input type="checkbox" onChange={checkbox} />
-                                <p>{e.task}</p>
-                                <p>{e.desc}</p>
-                            </div>
-                        )
-                    )}
+                {Tasks && Tasks.map((e): ReactNode => <Task e={e} />)}
             </div>
             <div className="flex justify-center h-96 items-end">
                 <button
