@@ -74,13 +74,12 @@ export default function Home() {
                 <h1 className="drop-shadow-2xl text-4xl ">TASK</h1>
                 <p>{date?.toString()}</p>
             </div>
-
-            <div className="flex justify-center flex-col gap-3 pt-10">
+            <div className="flex flex-wrap flex-col content-center justify-center items-center gap-3 pt-10">
                 {Tasks && Tasks.map((e): ReactNode => <Task e={e} />)}
             </div>
             <div className="flex justify-center h-96 items-end">
                 <button
-                    className="inline-flex bg-blue-500 hover:bg-blue-700 text-white font-bold px-5 py-5 h-18 rounded-full transition-transform hover:rotate-90 ease-in-out"
+                    className="sticky bottom-5 z-10 mt-5 bg-blue-500 hover:bg-blue-700 text-white font-bold px-5 py-5 h-18 rounded-full transition-transform hover:rotate-90 ease-in-out"
                     onClick={() => setOpen(true)}
                 >
                     <svg

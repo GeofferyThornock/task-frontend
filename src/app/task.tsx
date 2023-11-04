@@ -2,28 +2,23 @@ import React, { useState } from "react";
 /* @ts-ignore:disable-next-line */
 export default function Task({ e }) {
     const [Dropdown, setDropdown] = useState<any>(false);
-
-    const checkbox = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.currentTarget.checked) {
-            e.currentTarget.parentElement?.setAttribute(
-                "class",
-                "flex justify-center gap-1 text-xl line-through decoration-dotted"
-            );
-        } else {
-            e.currentTarget.parentElement?.setAttribute(
-                "class",
-                "flex justify-center gap-1 text-xl"
-            );
-        }
-    };
+    const [checkbox, setCheckbox] = useState<any>(false);
 
     return (
         <div
             key={e.id}
-            className="flex flex-wrap mr-3 justify-center rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700"
+            className={`flex flex-wrap mr-3 text-gray-200 justify-center rounded-lg bg-white p-6 shadow-2xl dark:bg-neutral-700 ${
+                checkbox && "line-through order-last"
+            }`}
         >
-            <input className="mr-2" type="checkbox" onChange={checkbox} />
-            <p className="mx-2">{e.task}</p>
+            <input
+                className="mr-2"
+                type="checkbox"
+                onChange={() =>
+                    checkbox ? setCheckbox(false) : setCheckbox(true)
+                }
+            />
+            <p className="mx-2 ">{e.task}</p>
             {e.desc && (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
