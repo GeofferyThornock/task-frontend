@@ -75,7 +75,7 @@ export default function Home() {
                 <p>{date?.toString()}</p>
             </div>
 
-            <div className=" pt-10">
+            <div className="flex justify-center flex-col gap-3 pt-10">
                 {Tasks && Tasks.map((e): ReactNode => <Task e={e} />)}
             </div>
             <div className="flex justify-center h-96 items-end">
