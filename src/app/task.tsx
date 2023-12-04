@@ -4,12 +4,13 @@ export default function Task({ e }) {
     const [Dropdown, setDropdown] = useState<any>(false);
     const [checkbox, setCheckbox] = useState<any>(false);
 
+    console.log(e);
+
     return (
         <div
             key={e.id}
-            className={`flex flex-wrap mr-3 text-gray-200 justify-center rounded-lg bg-white p-6 shadow-2xl dark:bg-neutral-700 ${
-                checkbox && "line-through order-last"
-            }`}
+            className={`flex flex-wrap mr-3 text-gray-200 justify-center rounded-lg bg-white p-6 shadow-2xl dark:bg-neutral-700
+            ${e.priority === 1 ? "order-first text-green-500" : ""}`}
         >
             <input
                 className="mr-2"
@@ -18,7 +19,7 @@ export default function Task({ e }) {
                     checkbox ? setCheckbox(false) : setCheckbox(true)
                 }
             />
-            <p className="mx-2 ">{e.task}</p>
+            <p className={`mx-2 ${checkbox && "strike"}`}>{e.task}</p>
             {e.desc && (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

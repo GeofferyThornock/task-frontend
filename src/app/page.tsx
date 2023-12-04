@@ -11,6 +11,7 @@ export default function Home() {
     interface Task {
         task: string;
         desc?: string;
+        priority?: number;
         completed: boolean;
     }
 
@@ -39,6 +40,13 @@ export default function Home() {
     let submitHandler = (data: Task) => {
         const abortController = new AbortController();
         const { task, desc } = data;
+
+        if (task.slice(0, 1) === "$") {
+            console.log("priority 1");
+            data.priority = 1;
+            data.task = task.slice(1);
+        }
+
         if (task.includes("(") && task.includes(")")) {
             let arr = task.match(/[^\/\(\)]+/g)?.map((e): Task => {
                 return { task: e.trim(), completed: false };
