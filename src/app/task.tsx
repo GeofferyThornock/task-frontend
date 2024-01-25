@@ -4,8 +4,6 @@ export default function Task({ e }) {
     const [Dropdown, setDropdown] = useState<any>(false);
     const [checkbox, setCheckbox] = useState<any>(false);
 
-    console.log(e);
-
     return (
         <div
             key={e.id}

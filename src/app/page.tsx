@@ -1,5 +1,6 @@
 "use client";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState, KeyboardEvent } from "react";
+import { Draggable } from "@shopify/draggable";
 import * as controller from "../../utils/api";
 import { DateTime } from "luxon";
 import Modal from "./modal-form";
@@ -25,24 +26,34 @@ export default function Home() {
     const [dropdown, setDropdown] = useState<any>(false);
     const [date, setDate] = useState<String>();
 
+    const keyboard = (e: KeyboardEvent): void => {
+        if (e.key === "T" && open === false) {
+            setOpen(true);
+        }
+    };
+
     const loadTasks = () => {
         const abortController = new AbortController();
         controller
             .listTasks(abortController.signal)
             .then(setTasks)
             .catch(console.log);
+
         setDate(DateTime.now().toLocaleString(DateTime.DATE_MED));
         return () => abortController.abort("could not list");
     };
 
-    useEffect(loadTasks, []);
+    useEffect(() => {
+        loadTasks();
+        /* @ts-ignore:disable-next-line */
+        window.addEventListener("keydown", keyboard);
+    }, []);
 
     let submitHandler = (data: Task) => {
         const abortController = new AbortController();
         const { task, desc } = data;
 
         if (task.slice(0, 1) === "$") {
-            console.log("priority 1");
             data.priority = 1;
             data.task = task.slice(1);
         }
@@ -54,7 +65,6 @@ export default function Home() {
 
             if (desc) {
                 desc?.match(/[^\/\(\)]+/g)?.forEach((e) => {
-                    console.log(e);
                     let newArr = e?.match(/\[[0-9-]+\]/g);
                     /* @ts-ignore:disable-next-line */
                     let num = parseInt(newArr[0]?.match(/[\d]+/g));
@@ -82,7 +92,7 @@ export default function Home() {
                 <h1 className="drop-shadow-2xl text-4xl ">TASK</h1>
                 <p>{date?.toString()}</p>
             </div>
-            <div className="flex flex-wrap flex-col content-center justify-center items-center gap-3 pt-10">
+            <div className="mouse-drag flex flex-wrap flex-col content-center justify-center items-center gap-3 pt-10">
                 {Tasks && Tasks.map((e): ReactNode => <Task e={e} />)}
             </div>
             <div className="flex justify-center h-96 items-end">

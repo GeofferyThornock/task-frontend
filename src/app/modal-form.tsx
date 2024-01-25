@@ -25,7 +25,6 @@ export default function Modal({
 
     const submitHandler = (e: { preventDefault: () => void }) => {
         e.preventDefault();
-        console.log(formData);
         setOpen(false);
         handleSubmit(formData);
         setFormData(initialFormData);
